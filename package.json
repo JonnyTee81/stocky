@@ -1,0 +1,23 @@
+{
+  "name": "stocky",
+  "version": "1.0.0",
+  "description": "Financial modeling sandbox.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonnyTee81/stocky.git"
+  },
+  "keywords": [
+    "stock",
+    "market"
+  ],
+  "author": "Jonny Thompson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JonnyTee81/stocky/issues"
+  },
+  "homepage": "https://github.com/JonnyTee81/stocky#readme"
+}
