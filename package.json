@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/JonnyTee81/stocky/issues"
   },
-  "homepage": "https://github.com/JonnyTee81/stocky#readme"
+  "homepage": "https://github.com/JonnyTee81/stocky#readme",
+  "dependencies": {
+    "request": "^2.83.0"
+  }
 }
