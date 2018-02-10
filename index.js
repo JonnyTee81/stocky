@@ -37,20 +37,13 @@ function main() {
     const symbol = 'FB';
     const baseRequestURL = "https://api.iextrading.com/1.0";
     // const buildEndpoint = "/stock/market/batch?symbols=aapl,fb&types=quote,news,chart&range=1m&last=5";
-    const buildEndpoint = `/stock/${symbol}/quote`;
+    const buildEndpoint = `/stock/${symbol}/chart`;
     // const buildEndpoint = `/stock/${symbol}/batch`;
     let dataPromise = getData(baseRequestURL + buildEndpoint);
     dataPromise.then(JSON.parse, errHandler)
-        // .then(function (result) {
-        //     userDetails = result;
-        //     // console.log("Initialized user details");
-        //     // let anotherPromise = getData(userDetails.followers_url)
-        //     //     .then(JSON.parse);
-        //     // return anotherPromise;
-        //     return userDetails;
-        // }, errHandler)
-        .then(function (data) {
-            console.log(data)
+        .then((data) => {
+            let closePrices = data.map(x => x.close);
+            console.log(closePrices);
         }, errHandler);
 }
 
