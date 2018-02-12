@@ -1,11 +1,14 @@
 const request = require('request');
 
-// API GET METHOD
-// Referencing article on Medium
-// Title: Writing neat asynchronous Node JS code with Promises
-// URL: https://medium.com/dev-bits/writing-neat-asynchronous-node-js-code-with-promises-32ed3a4fd098
-
+// Global variables
 let userDetails;
+const historicalTimeframe = "1m"; //eg. 1m, 3m, 6m, 1y, 2y, 5y
+const portfolio = [
+  {
+    symbol: "FB",
+    shares: 2
+  }
+];
 
 function getData(url) {
     // Set URL and headers for request
@@ -30,33 +33,56 @@ function getData(url) {
 }
 
 let errHandler = function (err) {
-    console.log(err);
+    console.error(err);
 }
 
-function main() {
-    const symbol = 'FB';
-    const historicalTimeframe = '1m'; //eg. 1m, 3m, 6m, 1y, 2y, 5y
-    const investmentShares = 1; // Number of shares bought
+function investmentValueArrayForSymbol(symbol, historicalTimeframe, investmentShares) {
     let benchmark = 0; // Initial value of purchase
+    let valArray = [];
+    // let symbol = "FB";
 
     const baseRequestURL = "https://api.iextrading.com/1.0";
-    // const buildEndpoint = "/stock/market/batch?symbols=aapl,fb&types=quote,news,chart&range=1m&last=5";
     const buildEndpoint = `/stock/${symbol}/chart/${historicalTimeframe}`;
-    // const buildEndpoint = `/stock/${symbol}/batch`;
     let dataPromise = getData(baseRequestURL + buildEndpoint);
-    dataPromise.then(JSON.parse, errHandler)
-        .then((data) => {
-            let closePrices = data.map(x => x.close);
-            // console.log(closePrices);
-            return closePrices;
-        }, errHandler)
-        .then((data) => {
-            benchmark = data[0]*investmentShares;
-            let closeValue = data.map(x => {
-                return ((x*investmentShares) - benchmark).toFixed(2);
-            });
-            console.log(closeValue);
-        }, errHandler);
+    return dataPromise
+      .then(JSON.parse, "[1] " + errHandler)
+      .then(data => {
+        let closePrices = data.map(x => x.close);
+        console.log("closePrices");
+        return closePrices;
+      }, "[2] " + errHandler)
+      .then(data => {
+        benchmark = data[0] * investmentShares;
+        let closeValue = data.map(x => {
+          return "$" + (x * investmentShares - benchmark).toFixed(2);
+        });
+        // resolve(closeValue);
+        console.log("closeValue");
+        return closeValue;
+      }, "[3] " + errHandler)
+      .catch(function(err) {
+        console.error(err);
+    });
 }
 
-main();
+function investmentPortfolioValue(portfolio) {
+  
+    let finalPortfolioValue =[];
+  // Loop through all investments in portfolio
+
+    // Get Values of all symbols
+    let sym01 = investmentValueArrayForSymbol("aapl", historicalTimeframe, 2);
+    let sym02 = investmentValueArrayForSymbol("FB", historicalTimeframe, 2);
+
+    // console.log(sym01);
+    let finVals = Promise.all([sym01, sym02]);
+    finVals.then(function(value){
+        console.log(value[0]);
+        console.log(value[1]);
+    })
+        .catch(function(value){
+            console.log(value);
+        });
+}
+
+investmentPortfolioValue(portfolio);
