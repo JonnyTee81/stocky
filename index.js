@@ -45,21 +45,18 @@ function investmentValueArrayForSymbol(symbol, historicalTimeframe, investmentSh
     const buildEndpoint = `/stock/${symbol}/chart/${historicalTimeframe}`;
     let dataPromise = getData(baseRequestURL + buildEndpoint);
     return dataPromise
-      .then(JSON.parse, "[1] " + errHandler)
+      .then(JSON.parse, errHandler)
       .then(data => {
         let closePrices = data.map(x => x.close);
-        console.log("closePrices");
         return closePrices;
-      }, "[2] " + errHandler)
+      }, errHandler)
       .then(data => {
         benchmark = data[0] * investmentShares;
         let closeValue = data.map(x => {
-          return "$" + (x * investmentShares - benchmark).toFixed(2);
+          return (x * investmentShares - benchmark).toFixed(2);
         });
-        // resolve(closeValue);
-        console.log("closeValue");
         return closeValue;
-      }, "[3] " + errHandler)
+      }, errHandler)
       .catch(function(err) {
         console.error(err);
     });
@@ -77,8 +74,12 @@ function investmentPortfolioValue(portfolio) {
     // console.log(sym01);
     let finVals = Promise.all([sym01, sym02]);
     finVals.then(function(value){
-        console.log(value[0]);
-        console.log(value[1]);
+        // console.log(value[0]);
+        // console.log(value[1]);
+        for(let i=0;i<value[0].length;i++){
+            finalPortfolioValue.push((Number(value[0][i]) + Number(value[1][i])).toFixed(2));
+        }
+        console.log(finalPortfolioValue);
     })
         .catch(function(value){
             console.log(value);
