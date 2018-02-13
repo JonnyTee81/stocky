@@ -2,10 +2,14 @@ const request = require('request');
 
 // Global variables
 let userDetails;
-const historicalTimeframe = "1m"; //eg. 1m, 3m, 6m, 1y, 2y, 5y
-const portfolio = [
+const TIMEFRAME = "1m"; //eg. 1m, 3m, 6m, 1y, 2y, 5y
+const PORTFOLIO = [
   {
     symbol: "FB",
+    shares: 2
+  },
+  {
+    symbol: "AAPL",
     shares: 2
   }
 ];
@@ -64,26 +68,32 @@ function investmentValueArrayForSymbol(symbol, historicalTimeframe, investmentSh
 
 function investmentPortfolioValue(portfolio) {
   
+    let symbols = [];
     let finalPortfolioValue =[];
-  // Loop through all investments in portfolio
+    
+    // Loop through all investments in portfolio
+    portfolio.forEach(element => {
+        symbols.push(investmentValueArrayForSymbol(element.symbol, TIMEFRAME, element.shares));
+        // console.log(element.symbol);
+    });
 
-    // Get Values of all symbols
-    let sym01 = investmentValueArrayForSymbol("aapl", historicalTimeframe, 2);
-    let sym02 = investmentValueArrayForSymbol("FB", historicalTimeframe, 2);
-
-    // console.log(sym01);
-    let finVals = Promise.all([sym01, sym02]);
+    let finVals = Promise.all(symbols);
     finVals.then(function(value){
-        // console.log(value[0]);
-        // console.log(value[1]);
-        for(let i=0;i<value[0].length;i++){
-            finalPortfolioValue.push((Number(value[0][i]) + Number(value[1][i])).toFixed(2));
-        }
-        console.log(finalPortfolioValue);
-    })
+            // Loop through days
+            for(let i=0;i<value[0].length;i++){
+                let sumStocks = 0; 
+                // Add all the stocks together for that day  
+                for(let j=0;j<symbols.length;j++){
+                    sumStocks += Number(value[j][i]);
+                }
+                // Add all the stock values together and add to array
+                finalPortfolioValue.push(sumStocks.toFixed(2));
+            }
+            console.log(finalPortfolioValue);
+        })
         .catch(function(value){
             console.log(value);
         });
 }
 
-investmentPortfolioValue(portfolio);
+investmentPortfolioValue(PORTFOLIO);
