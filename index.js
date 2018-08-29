@@ -43,7 +43,6 @@ let errHandler = function (err) {
 function investmentValueArrayForSymbol(symbol, historicalTimeframe, investmentShares) {
     let benchmark = 0; // Initial value of purchase
     let valArray = [];
-    // let symbol = "FB";
 
     const baseRequestURL = "https://api.iextrading.com/1.0";
     const buildEndpoint = `/stock/${symbol}/chart/${historicalTimeframe}`;
@@ -74,7 +73,6 @@ function investmentPortfolioValue(portfolio) {
     // Loop through all investments in portfolio
     portfolio.forEach(element => {
         symbols.push(investmentValueArrayForSymbol(element.symbol, TIMEFRAME, element.shares));
-        // console.log(element.symbol);
     });
 
     let finVals = Promise.all(symbols);
