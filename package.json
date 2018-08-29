@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/JonnyTee81/stocky#readme",
   "dependencies": {
-    "request": "^2.83.0"
+    "request": "^2.88.0"
   }
 }
